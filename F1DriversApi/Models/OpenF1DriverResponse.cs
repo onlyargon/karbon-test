@@ -15,4 +15,17 @@ public class OpenF1DriverResponse
     
     [JsonPropertyName("session_key")]
     public int SessionKey { get; set; }
+    
+    public Driver ToDriver()
+    {
+        return new Driver
+        {
+            DriverNumber = DriverNumber,
+            FullName = FullName,
+            TeamName = TeamName,
+            SessionKey = SessionKey,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+    }
 }

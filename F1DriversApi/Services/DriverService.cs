@@ -8,43 +8,58 @@ public class DriverService(IOpenF1Client openF1Client, IDriverRepository driverR
 {
     public async Task<IEnumerable<Driver>> GetDriversAsync(int? sessionKey = null)
     {
-        var _sessionKey = sessionKey ?? await GetSessionKeyAsync();
+        var session = sessionKey ?? await GetSessionKeyAsync();
         
         // check in db for cached drivers data
-        
+        if (await driverRepository.SessionHasDriversAsync(session))
+        {
+            return await driverRepository.GetDriversBySessionAsync(session);
+        }
         
         // fetch from api if not
-        var apiDrivers = await openF1Client.GetDriversAsync(_sessionKey.ToString());
+        var apiDrivers = await openF1Client.GetDriversAsync(session.ToString());
         if (!apiDrivers.Any())
         {
             return new List<Driver>();
         }
         
         // save fetched data to db
-        
+        var drivers = apiDrivers.Select(d => d.ToDriver()).ToList();
+        await driverRepository.SaveDriversAsync(drivers);
         
         // get data from db and return
-        return await driverRepository.GetDriversBySessionAsync(_sessionKey);
+        return await driverRepository.GetDriversBySessionAsync(session);
     }
 
     public async Task<Driver?> GetDriverByNumberAsync(int driverNumber, int? sessionKey = null)
     {
-        var _sessionKey = sessionKey ?? await GetSessionKeyAsync();
+        var session = sessionKey ?? await GetSessionKeyAsync();
         
         // check in db for cached driver
+        var cachedDriver = await driverRepository.GetDriverByNumberAndSessionAsync(driverNumber, session);
+        if (cachedDriver != null)
+        {
+            return cachedDriver;
+        }
         
         // check that driver is in the session
+        if (await driverRepository.SessionHasDriversAsync(session))
+        {
+            return null;
+        }
         
         // fetch from api
-        var apiDrivers = await openF1Client.GetDriverByNumberAsync(driverNumber,_sessionKey.ToString());
-        if (apiDrivers is null)
+        var apiDriver = await openF1Client.GetDriverByNumberAsync(driverNumber,session.ToString());
+        if (apiDriver is null)
         {
             return null;
         }
         
         // save to db
-
-        return null;
+        var driver = apiDriver.ToDriver();
+        var savedDriver = await driverRepository.SaveDriverAsync(driver);
+        
+        return savedDriver;
     }
 
     private async Task<int> GetSessionKeyAsync()
