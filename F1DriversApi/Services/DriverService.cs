@@ -12,6 +12,7 @@ public class DriverService(IOpenF1Client openF1Client, IDriverRepository driverR
         
         // check in db for cached drivers data
         
+        
         // fetch from api if not
         var apiDrivers = await openF1Client.GetDriversAsync(_sessionKey.ToString());
         if (!apiDrivers.Any())
@@ -35,8 +36,8 @@ public class DriverService(IOpenF1Client openF1Client, IDriverRepository driverR
         // check that driver is in the session
         
         // fetch from api
-        var apiDrivers = await openF1Client.GetDriversAsync(_sessionKey.ToString());
-        if (!apiDrivers.Any())
+        var apiDrivers = await openF1Client.GetDriverByNumberAsync(driverNumber,_sessionKey.ToString());
+        if (apiDrivers is null)
         {
             return null;
         }
