@@ -1,0 +1,6 @@
+@F1DriversApi_HostAddress = http://localhost:5047
+
+GET {{F1DriversApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
