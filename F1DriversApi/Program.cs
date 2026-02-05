@@ -2,6 +2,7 @@ using F1DriversApi.External;
 using F1DriversApi.Models;
 using F1DriversApi.Repositories;
 using F1DriversApi.Services;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
