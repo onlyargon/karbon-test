@@ -6,7 +6,7 @@ namespace F1DriversApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DriversController(DriverService service) : ControllerBase
+public class DriversController(IDriverService service) : ControllerBase
 {
     // Get Drivers
     [HttpGet]
