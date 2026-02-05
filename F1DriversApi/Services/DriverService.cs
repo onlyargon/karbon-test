@@ -35,6 +35,11 @@ public class DriverService(IOpenF1Client openF1Client, IDriverRepository driverR
         // check that driver is in the session
         
         // fetch from api
+        var apiDrivers = await openF1Client.GetDriversAsync(_sessionKey.ToString());
+        if (!apiDrivers.Any())
+        {
+            return null;
+        }
         
         // save to db
 
