@@ -1,0 +1,10 @@
+CREATE TABLE dbo.Drivers (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    DriverNumber INT NOT NULL,
+    FullName NVARCHAR(100) NULL,
+    TeamName NVARCHAR(100) NULL,
+    SessionKey INT NOT NULL,
+    CreatedAt DATETIME2 DEFAULT GETUTCDATE() NOT NULL,
+    UpdatedAt DATETIME2 DEFAULT GETUTCDATE() NOT NULL,
+    CONSTRAINT UQ_Driver_Session UNIQUE (DriverNumber, SessionKey)
+);
