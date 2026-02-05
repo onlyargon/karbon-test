@@ -12,7 +12,7 @@ public class OpenF1Client(HttpClient client) : IOpenF1Client
 
     public async Task<IEnumerable<OpenF1DriverResponse>> GetDriversAsync(string sessionKey = "latest")
     {
-        var url = $"drivers/session_key={sessionKey}";
+        var url = $"drivers?session_key={sessionKey}";
 
         try
         {
@@ -37,7 +37,7 @@ public class OpenF1Client(HttpClient client) : IOpenF1Client
 
     public async Task<OpenF1DriverResponse?> GetDriverByNumberAsync(int driverNumber, string sessionKey = "latest")
     {
-        var url = $"drivers/driver_number={driverNumber}&session_key={sessionKey}";
+        var url = $"drivers?driver_number={driverNumber}&session_key={sessionKey}";
 
         try
         {
